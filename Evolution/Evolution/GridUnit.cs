@@ -8,6 +8,7 @@ namespace Evolution
 {
     public class GridUnit
     {
-        public int food { get; set; }
+        public int Food { get; set; }
+        public int Water { get; set; }
     }
 }

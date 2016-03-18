@@ -9,28 +9,37 @@ namespace Evolution
     public static class World
     {
         // World is a square, so all lengths are for both X and Y
-        private static int worldSize { get; set; }
-        private static int foodCount { get; set; }
-        private static int avgFoodPerGridUnit { get; set; }
-        private static int gridUnitCount { get; set; }
-        private static int gridUnitSize { get; set; }
-        public static Grid grid { get; set; } 
+        private static int WorldSize { get; set; }
+        private static int FoodCount { get; set; }
+        private static int WaterCount { get; set; }
+        private static int AvgFoodPerGridUnit { get; set; }
+        private static int AvgWaterPerGridUnit { get; set; }
+        private static int GridUnitCount { get; set; }
+        private static int GridUnitSize { get; set; }
+        public static Grid Grid { get; set; } 
         
-        static World()
+        public static void Initialize()
         {
             SetWorldProperties();
             GenerateWorld();
         }
 
-        private static void SetWorldProperties()
+        public static void Run()
         {
-            worldSize = 100;
-            foodCount = 500;
-            avgFoodPerGridUnit = foodCount / worldSize;
-            gridUnitCount = (int) Math.Pow(worldSize, .5);
-            gridUnitSize = worldSize/gridUnitCount; 
-            var unitsPerDimension = (int) Math.Pow(gridUnitCount, .5);
-            grid = new Grid(gridUnitCount);
+
+        }
+
+        private static void SetWorldProperties(int worldSize = 100, int foodCount = 500, int waterCount = 500)
+        {
+            WorldSize = worldSize; 
+            FoodCount = foodCount;
+            WaterCount = waterCount;
+            AvgFoodPerGridUnit = FoodCount/WorldSize;
+            AvgWaterPerGridUnit = WaterCount/WorldSize;
+            GridUnitCount = (int) Math.Pow(WorldSize, .5);
+            GridUnitSize = WorldSize/GridUnitCount; 
+            var unitsPerDimension = (int) Math.Pow(GridUnitCount, .5);
+            Grid = new Grid(GridUnitCount);
         }
 
         private static void GenerateWorld()
@@ -40,14 +49,27 @@ namespace Evolution
 
         private static void GenerateFood()
         {
-            var remainingFood = foodCount;
+            var remainingFood = FoodCount;
 
-            for (var y = 0; y < gridUnitSize; y++)
-                for (var x = 0; x < gridUnitSize; x++)
+            for (var y = 0; y < GridUnitSize; y++)
+                for (var x = 0; x < GridUnitSize; x++)
                 {
                     var maxFood = remainingFood/4;
-                    var medianFood = remainingFood/(gridUnitCount - x - 1);
-                    grid.GetUnitAt(x, y).food = GetWeightedRandomNum(medianFood);
+                    var medianFood = remainingFood/(GridUnitCount - x - 1);
+                    Grid.GetUnitAt(x, y).Food = GetWeightedRandomNum(medianFood);
+                }
+        }
+
+        private static void GenerateWater()
+        {
+            var remainingWater = WaterCount;
+
+            for (var y = 0; y < GridUnitSize; y++)
+                for (var x = 0; x < GridUnitSize; x++)
+                {
+                    var maxWater = remainingWater / 4;
+                    var medianWater = remainingWater / (GridUnitCount - x - 1);
+                    Grid.GetUnitAt(x, y).Water = GetWeightedRandomNum(medianWater);
                 }
         }
 
@@ -67,13 +89,9 @@ namespace Evolution
             return numList.ElementAt(new Random().Next(0, numList.Count - 1));
         }
 
-        private static int GetWeightCount(int medianFood, int i)
+        private static int GetWeightCount(int median, int i)
         {
-            return (medianFood - i);
-        }
-
-        public static void Run()
-        {
+            return (median - i);
         }
     }
 }

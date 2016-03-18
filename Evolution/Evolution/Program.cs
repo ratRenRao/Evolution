@@ -10,7 +10,8 @@ namespace Evolution
     {
         static void Main(string[] args)
         {
-            new World();
+            World.Initialize();
+            World.Run();
         }
     }
 }
