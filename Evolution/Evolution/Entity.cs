@@ -18,6 +18,15 @@ namespace Evolution
         private double WaterConsumptionRate { get; set; }
         private double Hunger { get; set; }
         private double Thirst { get; set; }
+        private double Aggression { get; set; }
+        private double Sociality { get; set; }
+        //Calculated based on body/fat mass, hunger/thirst levels, and Injury
+        private double Health { get; set; }
+        private double Injury { get; set; }
+        //Used to identify if entities are of the same species.  Need to consider how to determine this...
+        private double SpeciesNumber { get; set; }
+        //Calculated by Health, Injury, Aggression, and Sociality
+        private double Reproductivity { get; set; }
         //Calculated from body + fat mass
         private double EnergyExpenditure { get; set; }
         private Stats Stats { get; set; }
@@ -25,14 +34,15 @@ namespace Evolution
 
         public Entity()
         {
+            Id = Globals.NextEntityId++;
             CreateRandomStats();
         }
 
-        public Entity(double speciesNumber, double weight, double height, double bodyMass, double fatMass, double health,
-            double injury, double aggression, double sociality, double reproductivity, double defense, double attack,
-            double mobility)
+        public Entity(double speciesNumber, double weight, double height, double bodyMass, double fatMass, double baseHealth, double baseAggression, double baseSociality, double baseReproductivity, double defense, double attack,
+            double mobility, double bodyFatPercent)
         {
-            CreateSpecificStats(speciesNumber, weight, height, bodyMass, fatMass, health, injury, aggression, sociality, reproductivity, defense, attack, mobility);
+            Id = Globals.NextEntityId++;
+            CreateSpecificStats(weight, height, bodyMass, fatMass, baseHealth, baseAggression, baseSociality, baseReproductivity, defense, attack, mobility, bodyFatPercent);
         }
 
         private void CreateRandomStats()
@@ -40,9 +50,30 @@ namespace Evolution
             Stats = new Stats(); 
         }
 
-        private void CreateSpecificStats(double speciesNumber, double weight, double height, double bodyMass, double fatMass, double health, double injury, double aggression, double sociality, double reproductivity, double defense, double attack, double mobility)
+        private void CreateSpecificStats(double weight, double height, double bodyMass, double fatMass, double baseHealth, double baseAggression, double baseSociality, double baseReproductivity, double defense, double attack, double mobility, double bodyFatPercent)
         {
-            Stats = new Stats(speciesNumber, weight, height, bodyMass, fatMass, health, injury, aggression, sociality, reproductivity, defense, attack, mobility); 
+            Stats = new Stats(weight, height, bodyMass, fatMass, baseHealth, baseAggression, baseSociality, baseReproductivity, defense, attack, mobility, bodyFatPercent); 
+        }
+
+        private double CalculateSpeciesNumber()
+        {
+            
+        }
+
+        private double CalculateHealth()
+        {
+
+        }
+
+        private double CalculateInjury()
+        {
+
+        }
+
+        private double CalculateReproductivity()
+        {
+
+
         }
     }
 }

@@ -22,12 +22,10 @@ namespace Evolution
 
         /**These variables are calculated from other variables on initialization**/
         //Calculated based on body/fat mass, hunger/thirst levels, and Injury
-        private double _health;
-        private double _injury;
+        private double _baseHealth;
         //Used to identify if entities are of the same species.  Need to consider how to determine this...
-        private double _speciesNumber;
         //Calculated by Health, Injury, Aggression, and Sociality
-        private double _reproductivity;
+        private double _baseReproductivity;
 
         /**These variables are generated randomly on initialization**/
         //Sum of body and fat mass
@@ -39,9 +37,9 @@ namespace Evolution
         //Affected quickly from increase/decrease in hunger
         private double _fatMass;
         //Affects odds of fighting, and of winning a fight. Affected by health and injury
-        private double _aggression;
+        private double _baseAggression;
         //Likeliness to group up with same species of Entities
-        private double _sociality;
+        private double _baseSociality;
         //Affects odds of surviving a fight
         private double _defense;
         //Affects odds of winning a fight
@@ -53,20 +51,18 @@ namespace Evolution
             GenerateRandomStats();
         }
 
-        public Stats(double speciesNumber, double weight, double height, double bodyMass, double fatMass, double health,
-            double injury, double aggression, double sociality, double reproductivity, double defense, double attack,
+        public Stats(double weight, double height, double bodyMass, double fatMass, double baseHealth,
+            double baseAggression, double baseSociality, double baseReproductivity, double defense, double attack,
             double mobility, double bodyFatPercent)
         {
-            _speciesNumber = speciesNumber;
             _weight = weight;
             _height = height;
             _bodyMass = bodyMass;
             _fatMass = fatMass;
-            _health = health;
-            _injury = injury;
-            _aggression = aggression;
-            _sociality = sociality;
-            _reproductivity = reproductivity;
+            _baseHealth = baseHealth;
+            _baseAggression = baseAggression;
+            _baseSociality = baseSociality;
+            _baseReproductivity = baseReproductivity;
             _defense = defense;
             _attack = attack;
             _mobility = mobility;
@@ -79,16 +75,11 @@ namespace Evolution
             _height = GenerateHeight();
             _bodyMass = GenerateBodyMass();
             _fatMass = GenerateFatMass();
-            _aggression = GenerateAggression();
-            _sociality = GenerateSociality();
+            _baseAggression = GenerateBaseAggression();
+            _baseSociality = GenerateBaseSociality();
             _attack = GenerateAttack();
             _mobility = GenerateMobility();
             _defense = GenerateDefense();
-
-            _health = CalculateHealth();
-            _injury = CalculateInjury();
-            _reproductivity = CalculateReproductivity();
-            _speciesNumber = CalculateSpeciesNumber();
         }
 
         private double GenerateWeight()
@@ -103,64 +94,43 @@ namespace Evolution
 
         private double GenerateBodyMass()
         {
-            if (_bodyFatPercent == 0d)
-                _bodyFatPercent = rand.Next((int)Globals.MinBodyFatPercent, (int)Globals.MaxBodyFatPercent);
+            if (_bodyFatPercent.Equals(0d))
+                _bodyFatPercent = Utilities.GenerateNormalDouble(Globals.MeanBodyFatPercent, Globals.DeviationBodyFatPercent);
 
             return _weight - (_bodyFatPercent * _weight);
         }
 
         private double GenerateFatMass()
         {
-            if (_bodyFatPercent == 0d)
-                _bodyFatPercent = rand.Next((int)Globals.MinBodyFatPercent, (int)Globals.MaxBodyFatPercent);
+            if (_bodyFatPercent.Equals(0d))
+                _bodyFatPercent = Utilities.GenerateNormalDouble(Globals.MeanBodyFatPercent, Globals.DeviationBodyFatPercent);
 
             return _bodyFatPercent * _weight;
         }
 
-        private double GenerateAggression()
+        private double GenerateBaseAggression()
         {
-
+            return Utilities.GenerateNormalDouble(Globals.MeanAggression, Globals.DeviationAgression);
         }
 
-        private double GenerateSociality()
+        private double GenerateBaseSociality()
         {
-
+            return Utilities.GenerateNormalDouble(Globals.MeanSociality, Globals.DeviationSociality);
         }
 
         private double GenerateDefense()
         {
-
+            return Utilities.GenerateNormalDouble(Globals.MeanDefense, Globals.DeviationDefense);
         }
 
         private double GenerateAttack()
         {
-
+            return Utilities.GenerateNormalDouble(Globals.MeanAttack, Globals.DeviationAttack);
         }
 
         private double GenerateMobility()
         {
-
-        }
-
-        private double CalculateHealth()
-        {
-
-        }
-
-        private double CalculateInjury()
-        {
-
-        }
-
-        private double CalculateSpeciesNumber()
-        {
-
-        }
-
-        private double CalculateReproductivity()
-        {
-
-
+            return Utilities.GenerateNormalDouble(Globals.MeanMobility, Globals.DeviationMobility);
         }
     }
 }
