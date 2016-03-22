@@ -10,5 +10,7 @@ namespace Evolution
     {
         public int Food { get; set; }
         public int Water { get; set; }
+        //Difficulty of travel
+        public double TraversalIndex { get; set; }
     }
 }
