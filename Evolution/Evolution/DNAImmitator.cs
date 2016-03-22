@@ -1,33 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Evolution
 {
-    public class DNAImmitator
+    public class DnaImmitator
     {
-        public class DNA
-        {
-            Dictionary<string, int[]> DNASequence = new Dictionary<string, int[]>
+        public Dictionary<string, int> DNA = new Dictionary<string, int>
             {
-                {"weight", new[] {0, 0, 0, 0}},
-                {"height", new[] {0, 0, 0, 0}},
-                {"baseHealth", new[] {0, 0, 0, 0}},
-                {"baseReproductivity", new[] {0, 0, 0, 0}},
-                {"baseAggression", new[] {0, 0, 0, 0}},
-                {"baseSociality", new[] {0, 0, 0, 0}},
-                {"attack", new[] {0, 0, 0, 0}},
-                {"defense", new[] {0, 0, 0, 0}},
-                {"mobility", new[] {0, 0, 0, 0}}
+                {"weight", 0},
+                {"height", 0},
+                {"baseHealth", 0},
+                {"baseReproductivity", 0},
+                {"baseAggression", 0},
+                {"baseSociality", 0},
+                {"attack", 0},
+                {"defense", 0},
+                {"mobility", 0}
             };
-        }
 
-        public DNA GenerateDNA(double weight, double height, double health, double reproduction, double aggression,
+        public DnaImmitator(double weight, double height, double health, double reproductivity, double aggression,
             double sociality, double attack, double defense, double mobility)
         {
-            return new DNA();
+            DNA["weight"] = GenerateDNASnippet(weight);
+            DNA["height"] = GenerateDNASnippet(height);
+            DNA["baseHealth"] = GenerateDNASnippet(health);
+            DNA["baseReproductivity"] = GenerateDNASnippet(reproductivity);
+            DNA["baseAggression"] = GenerateDNASnippet(aggression);
+            DNA["baseSociality"] = GenerateDNASnippet(sociality);
+            DNA["attack"] = GenerateDNASnippet(attack);
+            DNA["defense"] = GenerateDNASnippet(defense);
+            DNA["mobility"] = GenerateDNASnippet(mobility);
+        }
+
+        private int GenerateDNASnippet(double value)
+        {
+            var bits = BitConverter.DoubleToInt64Bits(value).ToString();
+            while (bits.Length < 8)
+            {
+                bits = "0" + bits;
+            }
+
+            return int.Parse(bits);
         }
     }
 }

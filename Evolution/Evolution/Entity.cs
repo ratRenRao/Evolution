@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,11 +38,12 @@ namespace Evolution
         //Calculated from body + fat mass
         private double EnergyExpenditure { get; set; }
 
-        private double _bodyFatPercent;
+        private double BodyFatPercent { get; set; }
         //Affected slowly from increase/decrease in hunger
-        private double _bodyMass;
+        private double BodyMass { get; set; }
         //Affected quickly from increase/decrease in hunger
-        private double _fatMass;
+        private double FatMass { get; set; }
+        private DnaImmitator DnaImmitator;
         private Stats Stats { get; set; }
         private GridUnit Location { get; set; }
 
@@ -50,6 +52,7 @@ namespace Evolution
             Id = Globals.NextEntityId++;
             CreateRandomStats();
             CalculateTraits();
+            GenerateDna();
         }
 
         public Entity( double weight, double height, double baseHealth, double baseAggression, double baseSociality, double baseReproductivity, double defense, double attack,
@@ -58,6 +61,7 @@ namespace Evolution
             Id = Globals.NextEntityId++;
             CreateSpecificStats(weight, height, baseHealth, baseAggression, baseSociality, baseReproductivity, defense, attack, mobility);
             CalculateTraits();
+            GenerateDna();
         }
 
         private void CreateRandomStats()
@@ -70,6 +74,12 @@ namespace Evolution
             Stats = new Stats(weight, height, baseHealth, baseAggression, baseSociality, baseReproductivity, defense, attack, mobility); 
         }
 
+        private void GenerateDna()
+        {
+            DnaImmitator = new DnaImmitator(Stats.Weight, Stats.Height, Stats.BaseHealth, Stats.BaseReproductivity, 
+                Stats.BaseAggression, Stats.BaseSociality, Stats.Attack, Stats.Defense, Stats.Mobility);
+        }
+
         private void CalculateTraits()
         {
             Gender = (GenderType) new Random().Next(0, 1);
@@ -77,7 +87,7 @@ namespace Evolution
 
         private double CalculateSpeciesNumber()
         {
-            
+            return 0d;
         }
 
         private double CalculateHealth()
@@ -98,18 +108,18 @@ namespace Evolution
 
         private double CalculateBodyMass()
         {
-            if (_bodyFatPercent.Equals(0d))
-                _bodyFatPercent = Utilities.GenerateNormalDouble(Globals.MeanBodyFatPercent, Globals.DeviationBodyFatPercent);
+            if (BodyFatPercent.Equals(0d))
+                BodyFatPercent = Utilities.GenerateNormalDouble(Globals.MeanBodyFatPercent, Globals.DeviationBodyFatPercent);
 
-            return Stats.Weight - (_bodyFatPercent * Stats.Weight);
+            return Stats.Weight - (BodyFatPercent * Stats.Weight);
         }
 
         private double GenerateFatMass()
         {
-            if (_bodyFatPercent.Equals(0d))
-                _bodyFatPercent = Utilities.GenerateNormalDouble(Globals.MeanBodyFatPercent, Globals.DeviationBodyFatPercent);
+            if (BodyFatPercent.Equals(0d))
+                BodyFatPercent = Utilities.GenerateNormalDouble(Globals.MeanBodyFatPercent, Globals.DeviationBodyFatPercent);
 
-            return _bodyFatPercent * _weight;
+            return BodyFatPercent * Stats.Weight;
         }
     }
 }
