@@ -19,6 +19,12 @@ namespace Evolution
         public readonly int Id;
         //Calculated from weight and mobility
         private double RequiredFood { get; set; }
+        //Rate at which Hunger increases (how fast food is burned)
+        //
+        //  **Food is burned at a rate of .5 unit per 100 pounds per day
+        private double Metabolism { get; set; }
+        // How much energy is gained from food
+        private double MetabolicEfficiency { get; set; }
         //Calculated from weight and mobility
         private double FoodConsumptionRate { get; set; }
         private double RequiredWater { get; set; }
@@ -90,9 +96,37 @@ namespace Evolution
             return 0d;
         }
 
+        //needs to be called recurringly
         private double CalculateHealth()
         {
+            
+        }
 
+        //needs to be called recurringly
+        private void DecreaseHunger(int foodEaten)
+        {
+            Hunger -= (foodEaten * MetabolicEfficiency);
+            if (Hunger > 100)
+            {
+                ConvertToFat(Hunger - 100);
+                Hunger = 100;
+            }
+        }
+
+        private void ConvertToFat(int overage)
+        {
+            BodyFatPercent += (overage*MetabolicEfficiency);
+        }
+
+        private void BurnFat(int decrease)
+        {
+            BodyFatPercent -= (decrease*MetabolicEfficiency);
+        }
+
+        //needs to be called recurringly
+        private double CalculateThirst()
+        {
+            
         }
 
         private double CalculateInjury()
